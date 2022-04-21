@@ -9,10 +9,8 @@ from keras.layers import StringLookup
 
 
 input_dataframe = pd.read_csv("TestData3.csv")
-
 val_dataframe = input_dataframe.sample(frac=0.2, random_state=1337)
 train_dataframe = input_dataframe.drop(val_dataframe.index)
-
 
 def dataframe_to_dataset(dataframe):
     dataframe = dataframe.copy()
@@ -21,15 +19,11 @@ def dataframe_to_dataset(dataframe):
     #ds = ds.shuffle(buffer_avg_len=len(dataframe))
     return ds
 
-
 train_ds = dataframe_to_dataset(train_dataframe)
 val_ds = dataframe_to_dataset(val_dataframe)
-
 print(train_ds.__len__())
-
 train_ds = train_ds.batch(32)
 val_ds = val_ds.batch(32)
-
 
 def encode_numerical_feature(feature, name, dataset):
     normalizer = Normalization()
@@ -39,7 +33,6 @@ def encode_numerical_feature(feature, name, dataset):
     encoded_feature = normalizer(feature)
     return encoded_feature
 
-
 def encode_categorical_feature(feature, name, dataset, is_string):
     lookup_class = StringLookup if is_string else IntegerLookup
     lookup = lookup_class(output_mode="binary")
@@ -48,7 +41,6 @@ def encode_categorical_feature(feature, name, dataset, is_string):
     lookup.adapt(feature_ds)
     encoded_feature = lookup(feature)
     return encoded_feature
-
 
 avg_len = keras.Input(shape=(1,), name="avg_len")
 num_unique_ports = keras.Input(shape=(1,), name="num_unique_ports")
